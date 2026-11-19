@@ -1,0 +1,12 @@
+[Unit]
+Description=Issue or renew the DERP relay TLS certificate
+Wants=network-online.target
+After=network-online.target docker.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/derp-stack
+EnvironmentFile=/etc/derp-stack/relay.env
+EnvironmentFile=/etc/derp-stack/acme.env
+ExecStart=/bin/bash /opt/derp-stack/scripts/renew-certificate.sh
+TimeoutStartSec=30min

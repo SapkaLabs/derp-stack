@@ -1,0 +1,33 @@
+name: derp-stack
+
+services:
+  derper:
+    build: ./images/derper
+    init: true
+    environment:
+      DERP_HOSTNAME: ${DERP_HOSTNAME:?Set DERP_HOSTNAME}
+    command:
+      - -a=:443
+      - -http-port=-1
+      - -stun=false
+      - -hostname=${DERP_HOSTNAME:?Set DERP_HOSTNAME}
+      - -certmode=manual
+      - -certdir=/certs
+      - -c=/var/lib/derper/derper.json
+    ports:
+      - "${LAN_BIND_IPV4:?Set LAN_BIND_IPV4}:443:443/tcp"
+      - "${LAN_BIND_IPV4:?Set LAN_BIND_IPV4}:${DERP_MAP_PORT:-9443}:9443/tcp"
+    volumes:
+      - relay-state:/var/lib/derper
+      - type: bind
+        source: ${DERP_CERT_DIR:?Set DERP_CERT_DIR}
+        target: /certs
+        read_only: true
+        bind:
+          # Compose v5.5 applies SELinux relabeling through the legacy bind API.
+          create_host_path: true
+          selinux: Z
+    restart: unless-stopped
+
+volumes:
+  relay-state:

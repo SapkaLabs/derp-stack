@@ -1,0 +1,25 @@
+pid /run/derp-map/nginx.pid;
+error_log /dev/stderr;
+
+events {}
+
+http {
+    access_log off;
+    server {
+        listen 9443 ssl;
+        server_name ${DERP_HOSTNAME};
+        ssl_certificate /certs/${DERP_HOSTNAME}.crt;
+        ssl_certificate_key /certs/${DERP_HOSTNAME}.key;
+        ssl_protocols TLSv1.2 TLSv1.3;
+
+        location = /derpmap.json {
+            default_type application/json;
+            alias /run/derp-map/derpmap.json;
+            add_header Cache-Control no-store;
+        }
+
+        location / {
+            return 404;
+        }
+    }
+}

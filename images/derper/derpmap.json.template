@@ -1,0 +1,20 @@
+{
+  "omitDefaultRegions": true,
+  "Regions": {
+    "900": {
+      "RegionID": 900,
+      "RegionCode": "private",
+      "RegionName": "Private relay",
+      "Nodes": [
+        {
+          "Name": "900a",
+          "RegionID": 900,
+          "HostName": "${DERP_HOSTNAME}",
+          "DERPPort": 443,
+          "IPv6": "none",
+          "STUNPort": -1
+        }
+      ]
+    }
+  }
+}
